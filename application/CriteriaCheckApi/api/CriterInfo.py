@@ -25,24 +25,51 @@ class CriteriaInfoClient:
     
     @staticmethod
     def check_criterias(response_json):
-        criteria = {}
-        name = response_json['name']
-        count = 0
+        try:
+            criteria = {}
+            name = response_json['name']
+            count = 0
 
-        criteria['naming'] = False
-        if len(name) % 2 == 0:
-            count = count + 1
-            criteria['naming'] = True
-        
+            criteria['naming'] = False
+            if len(name) % 2 == 0:
+                count = count + 1
+                criteria['naming'] = True        
 
-        min_term = int(response_json['main']['temp_min']) - 273.15
-        min_term = float(format(min_term, '.3f')) 
+            error, min_term = CriteriaInfoClient.convert_kelvin_to_celcius(int(response_json['main']['temp_min']))
+            if error:
+                raise Exception(error)
 
-        max_term = int(response_json['main']['temp_max']) - 273.15
-        max_term = float(format(max_term, '.3f'))
-        print(min_term,max_term)
-        
-        return criteria         
+            error, max_term = CriteriaInfoClient.convert_kelvin_to_celcius(int(response_json['main']['temp_max']))
+            if error:
+                raise Exception(error)
+
+            print(min_term,max_term)
+            criteria['daytemp'] = False
+            if (min_term > 17 and max_term < 25) or (min_term>10 and max_term < 15):
+                criteria['daytemp'] = True
+            
+            return criteria
+
+        except Exception as e:
+            message = e.args[0]
+            print(message)
+            return {'Error': f'{message}'}
+
+    @staticmethod
+    def convert_kelvin_to_celcius(kelvin):
+        try:            
+            celcius_in_float = kelvin - 273.15
+            celcius = float(format(celcius_in_float, '.3f'))
+
+            return None, celcius
+
+        except Exception as e:
+            message = e.args[0]
+            print(message)
+            return 'Kelvin is not in proper format', None
+
+
+
 
     @staticmethod
     def validate_name(name):
