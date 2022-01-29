@@ -9,9 +9,6 @@ app = create_app()
 def index():
     name = request.args.get('name')
     criteria_info = CriteriaInfoClient.get_info(name)
-
     res_json = CriteriaInfoClient.check_criterias(criteria_info)
-
-    return {
-            'message':'Initial commit of criteria check application'
-            }
+    
+    return res_json

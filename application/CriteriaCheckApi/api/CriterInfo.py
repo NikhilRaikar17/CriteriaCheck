@@ -43,12 +43,22 @@ class CriteriaInfoClient:
             if error:
                 raise Exception(error)
 
-            print(min_term,max_term)
             criteria['daytemp'] = False
             if (min_term > 17 and max_term < 25) or (min_term>10 and max_term < 15):
+                count = count + 1
                 criteria['daytemp'] = True
             
-            return criteria
+            rival_temp_json = CriteriaInfoClient.get_info('cologne')
+            criteria['rival'] = False
+            if response_json['main']['temp'] > rival_temp_json['main']['temp']:
+                count = count + 1
+                criteria['rival'] = True
+            
+            check = False
+            if count == 3:
+                check = True
+            
+            return {'Check': check, 'criteria': criteria}
 
         except Exception as e:
             message = e.args[0]
