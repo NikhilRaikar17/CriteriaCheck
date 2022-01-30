@@ -1,7 +1,9 @@
 from application.CriteriaCheckApi.api.CriterInfo import CriteriaInfoClient
 import pytest
+import requests
 
 class TestCriteriaCheck:
+
     def test_url(self):
         """ Test url with valid parameters """
         name = 'Karlsruhe'
@@ -12,13 +14,13 @@ class TestCriteriaCheck:
         """ Test url with unknown name """
         name = 'Karlsrasdasdsaduhe'
         response = CriteriaInfoClient.get_info(name)
-        assert response['Error'] == 'Invalid Request'
+        assert response['Message'] == 'Invalid Request'
     
     def test_url_with_small_name(self):
         """ Test url with city name less than 2 characters """
         name = 'de'
         response = CriteriaInfoClient.get_info(name)
-        assert response['Error'] == 'Name is too short'
+        assert response['Message'] == 'Name is too short'
     
     def test_name_criteria(self):
         """ Test name criteria with odd number """
@@ -71,12 +73,17 @@ class TestCriteriaCheck:
     def test_rival_temp(self):
         """ Check rival temp lesser than 280 """
         criteria_dict = {}
-        response_json = {'main': {'temp': 278.8 } }
+        response_json = {'main': {'temp': 274.8 } }
         count = 0
         response,count = CriteriaInfoClient.check_rival(criteria_dict,response_json,count)
         assert count == 0
     
-    
+    def test_whole_application(self):
+        """Check the application with same city names """
+        name = "karlsruhe"
+        response = requests.request(method="GET", url=f"http://127.0.0.1:5000/check?city={name}")
+        assert response.status_code == 200
 
+            
 
 

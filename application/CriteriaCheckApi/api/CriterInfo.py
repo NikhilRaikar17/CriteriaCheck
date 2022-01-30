@@ -21,7 +21,7 @@ class CriteriaInfoClient:
         except Exception as e:
             message = e.args[0]
             print(message)
-            return {'Error': f'{message}'}
+            return {'Error': True,'Message': f'{message}'}
     
     @staticmethod
     def check_criterias(response_json):
@@ -50,7 +50,7 @@ class CriteriaInfoClient:
         except Exception as e:
             message = e.args[0]
             print(message)
-            return {'Error': f'{message}'}
+            return {'Error': True,'Message': f'{message}'}
     
     @staticmethod
     def check_temp(criteria_dict,response_json,count):
