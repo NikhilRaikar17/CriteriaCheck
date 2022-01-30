@@ -58,6 +58,18 @@ class TestCriteriaCheck:
         response,count = CriteriaInfoClient.check_temp(criteria_dict,response_json,count)
         assert count == 1
     
+    def test_temp_criteria_17_25_with_Wrong_tem(self):
+        """ Check temperature criteria with greater 
+        than 17 and less than 25 """
+        criteria_dict = {}
+        response_json = {'main': {'temp_min': '2789789asd',
+                                'temp_max': 296.80
+                                } 
+                        }
+        count = 0
+        response,count = CriteriaInfoClient.check_temp(criteria_dict,response_json,count)
+        assert response['ERROR'] == 'Temperature are not properly formated'
+    
     def test_temp_criteria_10_15(self):
         """ Check temperature criteria with greater 
         than 10 and less than 15 """
