@@ -62,7 +62,7 @@ class TestCriteriaCheck:
         response,count = CriteriaInfoClient.check_temp(criteria_dict,response_json,count)
         assert count == 1
     
-    def test_rival_temp(self):
+    def test_rival_temp_max(self):
         """ Check rival temp greater than 280 """
         criteria_dict = {}
         response_json = {'main': {'temp': 284.8 } }
@@ -70,7 +70,7 @@ class TestCriteriaCheck:
         response,count = CriteriaInfoClient.check_rival(criteria_dict,response_json,count)
         assert count == 1
     
-    def test_rival_temp(self):
+    def test_rival_temp_min(self):
         """ Check rival temp lesser than 280 """
         criteria_dict = {}
         response_json = {'main': {'temp': 274.8 } }
