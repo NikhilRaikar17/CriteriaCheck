@@ -5,6 +5,7 @@ class CriteriaInfoClient:
 
     @staticmethod
     def get_info(name):
+        """ Get all information about the city """
         try:        
             error, name = CriteriaInfoClient.validate_name(name)
             if error:
@@ -25,6 +26,7 @@ class CriteriaInfoClient:
     
     @staticmethod
     def check_criterias(response_json):
+        """ Check all criterias """
         try:
             criteria = {}
             count = 0
@@ -54,6 +56,7 @@ class CriteriaInfoClient:
     
     @staticmethod
     def check_temp(criteria_dict,response_json,count):
+        """ Check temperature value """
         try:
             error, min_term = CriteriaInfoClient.convert_kelvin_to_celcius(int(response_json['main']['temp_min']))
             if error:
@@ -76,6 +79,7 @@ class CriteriaInfoClient:
     
     @staticmethod
     def check_rival(criteria_dict,response_json,count):
+        """ Check rival temperature and compare it with present city temperature """
         try:
             rival_temp_json = CriteriaInfoClient.get_info('cologne')
             criteria_dict['rival'] = False
@@ -90,6 +94,7 @@ class CriteriaInfoClient:
 
     @staticmethod
     def check_name(criteria_dict,response_json,count):
+        """ Check whether name has even number of characters """
         try:
             name = response_json['name']
             criteria_dict['naming'] = False
@@ -105,6 +110,7 @@ class CriteriaInfoClient:
 
     @staticmethod
     def convert_kelvin_to_celcius(kelvin):
+        """ Convert kelvin to celcius """
         try:            
             celcius_in_float = kelvin - 273.15
             celcius = float(format(celcius_in_float, '.3f'))
@@ -118,6 +124,7 @@ class CriteriaInfoClient:
 
     @staticmethod
     def validate_name(name):
+        """ Validate whether the user has inputed proper name """
         try:
             if not name:
                 raise Exception('Name is not passed')
