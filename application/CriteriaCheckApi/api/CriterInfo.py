@@ -1,3 +1,4 @@
+import re
 import requests
 
 class CriteriaInfoClient:
@@ -73,24 +74,34 @@ class CriteriaInfoClient:
         except Exception as e:
             message = e.args[0]
             print(message)
-            return {'ERROR':'Temperature are not properly formated'}
+            return {'ERROR':'Temperature are not properly formated'}, count
     
     @staticmethod
     def check_rival(criteria,response_json,count):
-        rival_temp_json = CriteriaInfoClient.get_info('cologne')
-        criteria['rival'] = False
-        if response_json['main']['temp'] > rival_temp_json['main']['temp']:
-            count = count + 1
-            criteria['rival'] = True
+        try:
+            rival_temp_json = CriteriaInfoClient.get_info('cologne')
+            criteria['rival'] = False
+            if response_json['main']['temp'] > rival_temp_json['main']['temp']:
+                count = count + 1
+                criteria['rival'] = True
+        except Exception as e:
+            message = e.args[0]
+            print(message)
+            return {'ERROR':'Rival Temperature could not be determined properly'},count
 
     @staticmethod
     def check_name(criteria_dict,name,count):
-        criteria_dict['naming'] = False
-        if len(name) % 2 == 0:
-            count = count + 1
-            criteria_dict['naming'] = True
+        try:
+            criteria_dict['naming'] = False
+            if len(name) % 2 == 0:
+                count = count + 1
+                criteria_dict['naming'] = True
 
-        return criteria_dict,count
+            return criteria_dict,count
+        except Exception as e:
+            message = e.args[0]
+            print(message)
+            return {'ERROR': 'Name could not be properly verified'}, count
 
     @staticmethod
     def convert_kelvin_to_celcius(kelvin):
