@@ -1,4 +1,3 @@
-import re
 import requests
 
 class CriteriaInfoClient:
@@ -28,10 +27,9 @@ class CriteriaInfoClient:
     def check_criterias(response_json):
         try:
             criteria = {}
-            name = response_json['name']
             count = 0
 
-            criteria,count = CriteriaInfoClient.check_name(criteria,name,count)
+            criteria,count = CriteriaInfoClient.check_name(criteria,response_json,count)
             if 'ERROR' in criteria.keys():
                 raise Exception(criteria['ERROR'])
 
@@ -66,7 +64,7 @@ class CriteriaInfoClient:
                 raise Exception(error)
 
             criteria_dict['daytemp'] = False
-            if (min_term > 17 and max_term < 25) or (min_term>10 and max_term < 15):
+            if (min_term > 17 and max_term < 25) or (min_term > 10 and max_term < 15):
                 count = count + 1
                 criteria_dict['daytemp'] = True
             
@@ -84,14 +82,16 @@ class CriteriaInfoClient:
             if response_json['main']['temp'] > rival_temp_json['main']['temp']:
                 count = count + 1
                 criteria['rival'] = True
+            return criteria,count
         except Exception as e:
             message = e.args[0]
             print(message)
             return {'ERROR':'Rival Temperature could not be determined properly'},count
 
     @staticmethod
-    def check_name(criteria_dict,name,count):
+    def check_name(criteria_dict,response_json,count):
         try:
+            name = response_json['name']
             criteria_dict['naming'] = False
             if len(name) % 2 == 0:
                 count = count + 1
@@ -120,7 +120,7 @@ class CriteriaInfoClient:
     def validate_name(name):
         try:
             if not name:
-                raise Exception('Name is not passed ')
+                raise Exception('Name is not passed')
             
             if len(name) <= 2:
                 raise Exception('Name is too short')
