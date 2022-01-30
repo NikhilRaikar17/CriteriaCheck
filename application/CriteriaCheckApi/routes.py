@@ -1,8 +1,7 @@
 from . import criteria_check_api_blueprint
 from .. import create_app
-from flask import request
+from flask import request, jsonify
 from .api.CriterInfo import CriteriaInfoClient
-import jsonify
 
 app = create_app()
 
