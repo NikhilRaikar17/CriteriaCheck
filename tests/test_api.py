@@ -75,6 +75,8 @@ class TestCriteriaCheck:
         count = 0
         response,count = CriteriaInfoClient.check_rival(criteria_dict,response_json,count)
         assert count == 0
+    
+    
 
 
 
