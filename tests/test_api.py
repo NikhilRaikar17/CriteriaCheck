@@ -28,7 +28,15 @@ class TestCriteriaCheck:
         response_json = {'name': 'test_name'}
         count = 0
         response,count = CriteriaInfoClient.check_name(criteria_dict,response_json,count)
-        assert criteria_dict['naming'] == False
+        assert response['naming'] == False
+    
+    def test_name_criteria_with_wrong_name_key(self):
+        """ Test name criteria with odd number """
+        criteria_dict = {}
+        response_json = {'namesda': 'test_name'}
+        count = 0
+        response,count = CriteriaInfoClient.check_name(criteria_dict,response_json,count)
+        assert response['ERROR'] == 'Name could not be properly verified'
     
     def test_name_criteria(self):
         """ Test name criteria with even number """
@@ -36,7 +44,7 @@ class TestCriteriaCheck:
         response_json = {'name': 'test_names'}
         count = 0
         response,count = CriteriaInfoClient.check_name(criteria_dict,response_json,count)
-        assert criteria_dict['naming'] == True
+        assert response['naming'] == True
     
     def test_temp_criteria_17_25(self):
         """ Check temperature criteria with greater 
@@ -79,7 +87,7 @@ class TestCriteriaCheck:
         assert count == 0
     
     def test_whole_application(self):
-        """Check the application with same city names """
+        """ Check the application with same city names """
         name = "karlsruhe"
         response = requests.request(method="GET", url=f"http://127.0.0.1:5000/check?city={name}")
         assert response.status_code == 200
