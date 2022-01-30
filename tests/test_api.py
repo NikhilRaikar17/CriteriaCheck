@@ -38,7 +38,7 @@ class TestCriteriaCheck:
         response,count = CriteriaInfoClient.check_name(criteria_dict,response_json,count)
         assert response['ERROR'] == 'Name could not be properly verified'
     
-    def test_name_criteria(self):
+    def test_name_criteria_with_even_name_char(self):
         """ Test name criteria with even number """
         criteria_dict = {}
         response_json = {'name': 'test_names'}
