@@ -30,30 +30,18 @@ class CriteriaInfoClient:
             name = response_json['name']
             count = 0
 
-            criteria['naming'] = False
-            if len(name) % 2 == 0:
-                count = count + 1
-                criteria['naming'] = True        
+            criteria,count = CriteriaInfoClient.check_name(criteria,name,count)
+            if 'ERROR' in criteria.keys():
+                raise Exception(criteria['ERROR'])
 
-            error, min_term = CriteriaInfoClient.convert_kelvin_to_celcius(int(response_json['main']['temp_min']))
-            if error:
-                raise Exception(error)
+            criteria,count = CriteriaInfoClient.check_temp(criteria,response_json,count)
+            if 'ERROR' in criteria.keys():
+                raise Exception(criteria['ERROR'])
 
-            error, max_term = CriteriaInfoClient.convert_kelvin_to_celcius(int(response_json['main']['temp_max']))
-            if error:
-                raise Exception(error)
+            criteria,count = CriteriaInfoClient.check_rival(criteria,response_json,count)
+            if 'ERROR' in criteria.keys():
+                raise Exception(criteria['ERROR'])
 
-            criteria['daytemp'] = False
-            if (min_term > 17 and max_term < 25) or (min_term>10 and max_term < 15):
-                count = count + 1
-                criteria['daytemp'] = True
-            
-            rival_temp_json = CriteriaInfoClient.get_info('cologne')
-            criteria['rival'] = False
-            if response_json['main']['temp'] > rival_temp_json['main']['temp']:
-                count = count + 1
-                criteria['rival'] = True
-            
             check = False
             if count == 3:
                 check = True
@@ -64,6 +52,45 @@ class CriteriaInfoClient:
             message = e.args[0]
             print(message)
             return {'Error': f'{message}'}
+    
+    @staticmethod
+    def check_temp(criteria_dict,response_json,count):
+        try:
+            error, min_term = CriteriaInfoClient.convert_kelvin_to_celcius(int(response_json['main']['temp_min']))
+            if error:
+                raise Exception(error)
+
+            error, max_term = CriteriaInfoClient.convert_kelvin_to_celcius(int(response_json['main']['temp_max']))
+            if error:
+                raise Exception(error)
+
+            criteria_dict['daytemp'] = False
+            if (min_term > 17 and max_term < 25) or (min_term>10 and max_term < 15):
+                count = count + 1
+                criteria_dict['daytemp'] = True
+            
+            return criteria_dict,count
+        except Exception as e:
+            message = e.args[0]
+            print(message)
+            return {'ERROR':'Temperature are not properly formated'}
+    
+    @staticmethod
+    def check_rival(criteria,response_json,count):
+        rival_temp_json = CriteriaInfoClient.get_info('cologne')
+        criteria['rival'] = False
+        if response_json['main']['temp'] > rival_temp_json['main']['temp']:
+            count = count + 1
+            criteria['rival'] = True
+
+    @staticmethod
+    def check_name(criteria_dict,name,count):
+        criteria_dict['naming'] = False
+        if len(name) % 2 == 0:
+            count = count + 1
+            criteria_dict['naming'] = True
+
+        return criteria_dict,count
 
     @staticmethod
     def convert_kelvin_to_celcius(kelvin):
@@ -77,9 +104,6 @@ class CriteriaInfoClient:
             message = e.args[0]
             print(message)
             return 'Kelvin is not in proper format', None
-
-
-
 
     @staticmethod
     def validate_name(name):
