@@ -75,14 +75,14 @@ class CriteriaInfoClient:
             return {'ERROR':'Temperature are not properly formated'}, count
     
     @staticmethod
-    def check_rival(criteria,response_json,count):
+    def check_rival(criteria_dict,response_json,count):
         try:
             rival_temp_json = CriteriaInfoClient.get_info('cologne')
-            criteria['rival'] = False
+            criteria_dict['rival'] = False
             if response_json['main']['temp'] > rival_temp_json['main']['temp']:
                 count = count + 1
-                criteria['rival'] = True
-            return criteria,count
+                criteria_dict['rival'] = True
+            return criteria_dict,count
         except Exception as e:
             message = e.args[0]
             print(message)
