@@ -25,7 +25,7 @@ Api- Criteria Check
 ```
 ## Setup and Configuration
 To launch the application perform the following:
-
+> Please make sure there is an enviromnet variable in the name 'api_key' with the value of your api key before running this application.
 ### Step 1.
 Create a virtual environment:
 ```
