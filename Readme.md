@@ -2,7 +2,7 @@
 This would be a small api designed to perform some operations on weather data of a city. 
 
 ## Project Architecture
- ![Architecture Diagram](images/architecture_diagram.png)
+ ![Architecture Diagram](images/architecture_diagram.PNG)
 
 At the beginning, a request is sent to an endpoint with a city name. The city name is later validated and all the regarding weather information about that specific city is fetched. Once the information is fetched, it is later evaluated against certain predefined criteria. These criteras are executed in random order.
 
