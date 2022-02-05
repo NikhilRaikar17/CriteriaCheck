@@ -1,7 +1,8 @@
 import requests
+import os
 
 class CriteriaInfoClient:
-    api_key = '8ca1bf554fe26dff41d635d4e2f866ed'
+    api_key = str(os.environ['api_key'])
 
     @staticmethod
     def get_info(name):
@@ -10,8 +11,9 @@ class CriteriaInfoClient:
             error, name = CriteriaInfoClient.validate_name(name)
             if error:
                 raise Exception(error)
-
+                
             response = requests.request(method="GET", url=f"http://api.openweathermap.org/data/2.5/weather?q={name},de&appid={CriteriaInfoClient.api_key}")
+
             if response.status_code!= 200:
                 raise Exception('Invalid Request')
             
